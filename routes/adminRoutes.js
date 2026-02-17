@@ -22,7 +22,6 @@ router.get("/visitors", auth, async (req, res) => {
 // ================= LOGIN =================
 
 router.get("/login", (req, res) => res.render("login"));
-console.log(req.session);
 
 
 router.post("/login", async (req, res) => {
