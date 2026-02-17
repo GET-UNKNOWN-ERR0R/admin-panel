@@ -1,0 +1,44 @@
+<link rel="stylesheet" href="/style.css">
+
+<div class="container">
+
+    <h2>Visitors</h2>
+
+    <div class="card">
+        <table>
+            <tr>
+                <th>IP</th>
+                <th>Country</th>
+                <th>Device</th>
+                <th>Total Visits</th>
+                <th>Last Visit</th>
+                <th>Browser</th>
+            </tr>
+
+            <% visitors.forEach(v=>{ %>
+                <tr>
+                    <td>
+                        <%=v.ip%>
+                    </td>
+                    <td>
+                        <%=v.country%>
+                    </td>
+                    <td>
+                        <%=v.device%>
+                    </td>
+                    <td><b>
+                            <%=v.count%>
+                        </b></td>
+                    <td>
+                        <%=v.lastVisit.toLocaleString()%>
+                    </td>
+                    <td style="font-size:12px">
+                        <%=v.browser%>
+                    </td>
+                </tr>
+                <% }) %>
+
+        </table>
+    </div>
+
+</div>

@@ -1,0 +1,35 @@
+<link rel="stylesheet" href="/style.css">
+
+<div class="container">
+
+    <h2>About Settings</h2>
+
+    <div class="card">
+        <form action="/admin/settings" method="POST" enctype="multipart/form-data">
+
+            <textarea name="aboutLine1"><%=s?.aboutLine1%></textarea>
+            <textarea name="aboutLine2"><%=s?.aboutLine2%></textarea>
+
+            <label>Profile Image</label>
+            <input type="file" name="profileImage">
+
+            <label>Resume PDF</label>
+            <input type="file" name="resume">
+
+            <input type="hidden" name="oldProfile" value="<%=s?.profileImage%>">
+            <input type="hidden" name="oldResume" value="<%=s?.resumeLink%>">
+
+            <button>Update</button>
+        </form>
+
+        <br>
+        <img src="<%=s?.profileImage%>" width="150">
+        <a href="<%=s?.profileImage%>" target="_blank">View Profile</a>
+
+        <br>
+        <img src="<%=s?.resumeLink%>" width="150">
+        <a href="<%=s?.resumeLink%>" target="_blank">View Resume</a>
+
+
+    </div>
+</div>

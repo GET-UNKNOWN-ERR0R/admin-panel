@@ -1,0 +1,27 @@
+<link rel="stylesheet" href="/style.css">
+
+<div class="container">
+
+    <h2>Certifications</h2>
+
+    <div class="card">
+        <form action="/admin/certifications/add" method="POST" enctype="multipart/form-data">
+            <input name="title" required placeholder="Title">
+            <input name="provider" placeholder="Provider">
+            <input name="year" placeholder="Year">
+            <input type="file" name="image">
+            <button>Add</button>
+        </form>
+    </div>
+
+    <div class="card">
+        <% certs.forEach(c=>{ %>
+            <div>
+                <img src="<%=c.image%>" width="120">
+                <a href="/admin/certifications/delete/<%=c._id%>">Delete</a>
+            </div>
+            <hr>
+            <% }) %>
+    </div>
+
+</div>
