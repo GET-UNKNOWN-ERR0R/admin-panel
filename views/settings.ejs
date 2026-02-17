@@ -1,35 +1,51 @@
-<link rel="stylesheet" href="/style.css">
+<!DOCTYPE html>
+<html lang="en">
 
-<div class="container">
+<head>
+    <meta charset="UTF-8">
+    <title>About Settings</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
 
-    <h2>About Settings</h2>
+<body>
+    <div class="container">
 
-    <div class="card">
-        <form action="/admin/settings" method="POST" enctype="multipart/form-data">
+        <h2>About Settings</h2>
 
-            <textarea name="aboutLine1"><%=s?.aboutLine1%></textarea>
-            <textarea name="aboutLine2"><%=s?.aboutLine2%></textarea>
+        <div class="card">
+            <form action="/admin/settings" method="POST" enctype="multipart/form-data">
 
-            <label>Profile Image</label>
-            <input type="file" name="profileImage">
+                <textarea name="aboutLine1"><%= s?.aboutLine1 %></textarea>
+                <textarea name="aboutLine2"><%= s?.aboutLine2 %></textarea>
 
-            <label>Resume PDF</label>
-            <input type="file" name="resume">
+                <label>Profile Image</label>
+                <input type="file" name="profileImage">
 
-            <input type="hidden" name="oldProfile" value="<%=s?.profileImage%>">
-            <input type="hidden" name="oldResume" value="<%=s?.resumeLink%>">
+                <label>Resume PDF</label>
+                <input type="file" name="resume">
 
-            <button>Update</button>
-        </form>
+                <input type="hidden" name="oldProfile" value="<%= s?.profileImage %>">
+                <input type="hidden" name="oldResume" value="<%= s?.resumeLink %>">
 
-        <br>
-        <img src="<%=s?.profileImage%>" width="150">
-        <a href="<%=s?.profileImage%>" target="_blank">View Profile</a>
+                <button type="submit">Update</button>
+            </form>
 
-        <br>
-        <img src="<%=s?.resumeLink%>" width="150">
-        <a href="<%=s?.resumeLink%>" target="_blank">View Resume</a>
+            <br>
 
+            <% if (s?.profileImage) { %>
+                <img src="<%= s.profileImage %>" width="150">
+                <a href="<%= s.profileImage %>" target="_blank">View Profile</a>
+                <% } %>
 
+                    <br>
+
+                    <% if (s?.resumeLink) { %>
+                        <img src="<%= s.resumeLink %>" width="150">
+                        <a href="<%= s.resumeLink %>" target="_blank">View Resume</a>
+                        <% } %>
+
+        </div>
     </div>
-</div>
+</body>
+
+</html>

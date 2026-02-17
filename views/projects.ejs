@@ -1,34 +1,43 @@
-<link rel="stylesheet" href="/style.css">
+<!DOCTYPE html>
+<html lang="en">
 
-<div class="container">
+<head>
+    <meta charset="UTF-8">
+    <title>Projects</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
 
-    <h2>Projects</h2>
+<body>
+    <div class="container">
 
-    <div class="card">
-        <form action="/admin/projects/add" method="POST" enctype="multipart/form-data">
-            <input name="title" placeholder="Title" required>
-            <input name="description" placeholder="Description">
-            <input name="github" placeholder="Github Link">
-            <input name="live" placeholder="Live Link">
-            <input name="tech" placeholder="React,Node,Mongo">
-            <input type="file" name="image">
-            <button>Add Project</button>
-        </form>
+        <h2>Projects</h2>
+
+        <div class="card">
+            <form action="/admin/projects/add" method="POST" enctype="multipart/form-data">
+                <input name="title" placeholder="Title" required>
+                <input name="description" placeholder="Description">
+                <input name="github" placeholder="Github Link">
+                <input name="live" placeholder="Live Link">
+                <input name="tech" placeholder="React,Node,Mongo">
+                <input type="file" name="image">
+                <button type="submit">Add Project</button>
+            </form>
+        </div>
+
+        <div class="card">
+            <% projects.forEach(p=> { %>
+                <div style="margin-bottom:15px">
+                    <img src="<%= p.image %>" width="120">
+                    <b>
+                        <%= p.title %>
+                    </b>
+                    <a href="/admin/projects/delete/<%= p._id %>">Delete</a>
+                </div>
+                <hr>
+                <% }) %>
+        </div>
+
     </div>
+</body>
 
-    <div class="card">
-        <% projects.forEach(p=>{ %>
-            <div style="margin-bottom:15px">
-                <img src="<%=p.image%>" width="120">
-                <b>
-                    <%=p.title%>
-                </b>
-
-
-                <a href="/admin/projects/delete/<%=p._id%>">Delete</a>
-            </div>
-            <hr>
-            <% }) %>
-    </div>
-
-</div>
+</html>
