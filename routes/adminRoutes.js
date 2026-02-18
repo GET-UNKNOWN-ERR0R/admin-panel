@@ -31,8 +31,13 @@ router.post("/login", async (req, res) => {
     const ok = await bcrypt.compare(req.body.password, admin.password);
     if (!ok) return res.send("Invalid password");
 
+    // req.session.admin = admin._id;
+    // res.redirect("/admin/dashboard");
     req.session.admin = admin._id;
-    res.redirect("/admin/dashboard");
+    req.session.save(() => {
+        res.redirect("/admin/dashboard");
+    });
+
 });
 
 router.get("/logout", (req, res) => {
