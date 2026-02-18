@@ -18,10 +18,12 @@ mongoose.connect(process.env.MONGO_URI)
     .catch(err => console.log(err));
 
 // CORS
-app.use(cors({
-    origin: "https://mern-portfolio-indol.vercel.app",
-    credentials: true
-}));
+axios.post(
+    "https://admin-panel-k7ew.onrender.com/admin/login",
+    data,
+    { withCredentials: true }
+  );
+  
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
