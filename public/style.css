@@ -1,75 +1,155 @@
-*{margin:0;padding:0;box-sizing:border-box;font-family:Poppins, sans-serif}
-
-body{
-  background:#0f172a;
-  color:#e2e8f0;
-  padding:20px;
-}
-
-h1,h2{margin:20px 0;color:#fff}
-
-a{color:#60a5fa;text-decoration:none;margin-right:15px}
-a:hover{color:#fff}
-
-.container{max-width:1100px;margin:auto}
-
-.card{
-  background:#1e293b;
-  padding:20px;
-  border-radius:12px;
-  margin-bottom:20px;
-  box-shadow:0 8px 25px rgba(0,0,0,.3)
-}
-
-form{display:grid;gap:10px;margin-bottom:20px}
-
-input,textarea{
-  padding:10px;
-  border-radius:8px;
-  border:none;
-  background:#334155;
-  color:#fff
-}
-
-button{
-  padding:10px;
-  border:none;
-  border-radius:8px;
-  background:#6366f1;
-  color:#fff;
-  cursor:pointer
-}
-button:hover{background:#4f46e5}
-
-img{border-radius:10px;margin:5px 0}
-
-table{
-  width:100%;
-  border-collapse:collapse;
-  background:#1e293b;
-  border-radius:12px;
-  overflow:hidden
-}
-th,td{
-  padding:10px;
-  border-bottom:1px solid #334155
-}
-th{background:#020617}
-
-.tech-badge{
-  background:#6366f1;
-  padding:3px 8px;
-  border-radius:6px;
-  font-size:12px;
-  margin:2px;
-  display:inline-block
-}
-
-.login-box{
-  max-width:350px;
-  margin:120px auto;
-  background:#1e293b;
-  padding:30px;
-  border-radius:12px;
-  text-align:center
-}
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:"Segoe UI",Arial,sans-serif
+  }
+  body{
+    background:#0f172a;
+    color:#e5e7eb;
+    min-height:100vh
+  }
+  a{
+    color:#38bdf8;
+    text-decoration:none
+  }
+  a:hover{text-decoration:underline}
+  
+  .nav{
+    background:#020617;
+    padding:15px 25px;
+    display:flex;
+    align-items:center;
+    gap:20px;
+    border-bottom:1px solid #1e293b
+  }
+  .nav h2{
+    margin-right:auto;
+    color:#38bdf8
+  }
+  .nav a{
+    color:#cbd5f5;
+    font-weight:500
+  }
+  .nav a:hover{color:#38bdf8}
+  
+  .center{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh
+  }
+  .container{
+    max-width:1100px;
+    margin:auto;
+    padding:30px
+  }
+  
+  .card,form{
+    background:#020617;
+    border:1px solid #1e293b;
+    border-radius:12px;
+    padding:22px;
+    margin:20px 0;
+    box-shadow:0 10px 30px rgba(0,0,0,.35)
+  }
+  form{
+    padding:25px;
+    margin-bottom:30px
+  }
+  .card h2,.card h3,form h2{margin-bottom:10px}
+  
+  label{
+    display:block;
+    margin:15px 0 6px;
+    font-size:14px;
+    opacity:.9
+  }
+  
+  input,button{
+    width:100%;
+    padding:12px;
+    margin:8px 0;
+    border-radius:6px;
+    border:none;
+    font-size:14px
+  }
+  input{
+    background:#020617;
+    color:#e5e7eb;
+    border:1px solid #1e293b
+  }
+  input:focus{
+    outline:none;
+    border-color:#38bdf8
+  }
+  
+  button{
+    background:#38bdf8;
+    color:#020617;
+    font-weight:600;
+    cursor:pointer;
+    transition:.2s
+  }
+  button:hover{background:#0ea5e9}
+  
+  .delete{
+    display:inline-block;
+    margin-top:12px;
+    color:#ef4444;
+    font-weight:600
+  }
+  .delete:hover{color:#f87171}
+  
+  .image-box{margin-top:12px;max-width:280px}
+  .image-box img,
+  .preview-box img{
+    width:100%;
+    border-radius:10px;
+    border:1px solid #1e293b
+  }
+  
+  .settings-form,.preview-box,.resume-box{margin-top:10px}
+  .preview-box img{
+    max-width:180px;
+    margin-top:6px
+  }
+  
+  .resume-box a{
+    display:inline-block;
+    padding:8px 14px;
+    background:#020617;
+    border:1px solid #1e293b;
+    border-radius:6px;
+    font-size:14px
+  }
+  .resume-box a:hover{border-color:#38bdf8}
+  
+  .visitor-card{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:12px;
+    font-size:14px
+  }
+  .visitor-card p{opacity:.9}
+  
+  hr{
+    border:none;
+    height:1px;
+    background:#1e293b;
+    margin:30px 0
+  }
+  
+  .login-card{width:360px}
+  .login-card h2{
+    text-align:center;
+    margin-bottom:15px
+  }
+  
+  @media(max-width:768px){
+    .nav{flex-wrap:wrap}
+    .container{padding:20px}
+    form,.card{padding:18px}
+    .image-box{max-width:100%}
+  }
+  

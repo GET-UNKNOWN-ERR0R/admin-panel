@@ -1,51 +1,57 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 
 <head>
-    <meta charset="UTF-8">
-    <title>About Settings</title>
+    <title>Settings</title>
     <link rel="stylesheet" href="/style.css">
 </head>
 
 <body>
+
+    <nav class="nav">
+        <h2>Settings</h2>
+        <a href="/admin/dashboard">Dashboard</a>
+    </nav>
+
     <div class="container">
 
-        <h2>About Settings</h2>
-
         <div class="card">
-            <form action="/admin/settings" method="POST" enctype="multipart/form-data">
+            <h2>About Section Settings</h2>
 
-                <textarea name="aboutLine1"><%= s?.aboutLine1 %></textarea>
-                <textarea name="aboutLine2"><%= s?.aboutLine2 %></textarea>
+            <form method="POST" enctype="multipart/form-data" class="settings-form">
+
+                <label>About Line 1</label>
+                <input type="text" name="aboutLine1" value="<%= settings?.aboutLine1 || '' %>"
+                    placeholder="About line 1" required />
+
+                <label>About Line 2</label>
+                <input type="text" name="aboutLine2" value="<%= settings?.aboutLine2 || '' %>"
+                    placeholder="About line 2" required />
+
+                <input type="hidden" name="oldProfile" value="<%= settings?.profileImage || '' %>" />
+                <input type="hidden" name="oldResume" value="<%= settings?.resumeLink || '' %>" />
+
 
                 <label>Profile Image</label>
-                <input type="file" name="profileImage">
+                <input type="file" name="profileImage" />
 
-                <label>Resume PDF</label>
-                <input type="file" name="resume">
+                <% if(settings?.profileImage){ %>
+                    <div class="preview-box">
+                        <p>Current Profile Image:</p>
+                        <img src="<%= settings.profileImage %>" alt="Profile" />
+                    </div>
+                    <% } %>
 
-                <input type="hidden" name="oldProfile" value="<%= s?.profileImage %>">
-                <input type="hidden" name="oldResume" value="<%= s?.resumeLink %>">
+                        <label>Resume URL</label>
+                        <input type="url" name="resumeLink" id="resumeInput" placeholder="https://drive.google.com/..."
+                            value="<%= settings?.resumeLink || '' %>" oninput="updateResumePreview()" required />
 
-                <button type="submit">Update</button>
+                        <button type="submit">Update Settings</button>
             </form>
-
-            <br>
-
-            <% if (s?.profileImage) { %>
-                <img src="<%= s.profileImage %>" width="150">
-                <a href="<%= s.profileImage %>" target="_blank">View Profile</a>
-                <% } %>
-
-                    <br>
-
-                    <% if (s?.resumeLink) { %>
-                        <img src="<%= s.resumeLink %>" width="150">
-                        <a href="<%= s.resumeLink %>" target="_blank">View Resume</a>
-                        <% } %>
-
         </div>
+
     </div>
+
 </body>
 
 </html>

@@ -1,55 +1,48 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 
 <head>
-    <meta charset="UTF-8">
     <title>Visitors</title>
     <link rel="stylesheet" href="/style.css">
 </head>
 
 <body>
+
+    <nav class="nav">
+        <h2>Visitors</h2>
+        <a href="/admin/dashboard">Dashboard</a>
+    </nav>
+
     <div class="container">
 
-        <h2>Visitors</h2>
-
-        <div class="card">
-            <table>
-                <tr>
-                    <th>IP</th>
-                    <th>Country</th>
-                    <th>Device</th>
-                    <th>Total Visits</th>
-                    <th>Last Visit</th>
-                    <th>Browser</th>
-                </tr>
+        <% if(visitors.length===0){ %>
+            <p>No visitors yet</p>
+            <% } %>
 
                 <% visitors.forEach(v=> { %>
-                    <tr>
-                        <td>
-                            <%= v.ip %>
-                        </td>
-                        <td>
-                            <%= v.country %>
-                        </td>
-                        <td>
-                            <%= v.device %>
-                        </td>
-                        <td><b>
-                                <%= v.count %>
-                            </b></td>
-                        <td>
-                            <%= v.lastVisit.toLocaleString() %>
-                        </td>
-                        <td style="font-size:12px">
-                            <%= v.browser %>
-                        </td>
-                    </tr>
+                    <div class="card visitor-card">
+                        <p><b>IP:</b>
+                            <%= v.ip || "N/A" %>
+                        </p>
+                        <p><b>Location:</b>
+                            <%= v.country || "" %>
+                                <%= v.city || "" %>
+                        </p>
+                        <p><b>Device:</b>
+                            <%= v.device || "Unknown" %>
+                        </p>
+                        <p style="font-size:12px">
+                            <%= v.browser || "" %>
+                        </p>
+                        <p>
+                            <b>Visited:</b>
+                            <%= v.createdAt ? new Date(v.createdAt).toLocaleString() : "N/A" %>
+                        </p>
+                    </div>
                     <% }) %>
 
-            </table>
-        </div>
-
     </div>
+
 </body>
 
 </html>

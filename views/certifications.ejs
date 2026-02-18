@@ -1,36 +1,49 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
+
 <head>
-    <meta charset="UTF-8">
     <title>Certifications</title>
     <link rel="stylesheet" href="/style.css">
 </head>
 
 <body>
+
+    <nav class="nav">
+        <h2>Certifications</h2>
+        <a href="/admin/dashboard">Dashboard</a>
+    </nav>
+
     <div class="container">
 
-        <h2>Certifications</h2>
+        <h2>Add Certification</h2>
+        <form method="POST" enctype="multipart/form-data">
+            <input name="title" placeholder="Title" required />
+            <input name="provider" placeholder="Provider" required />
+            <input name="year" placeholder="Year" required />
+            <input type="file" name="image" required />
+            <button>Add Certification</button>
+        </form>
 
-        <div class="card">
-            <form action="/admin/certifications/add" method="POST" enctype="multipart/form-data">
-                <input name="title" required placeholder="Title">
-                <input name="provider" placeholder="Provider">
-                <input name="year" placeholder="Year">
-                <input type="file" name="image">
-                <button>Add</button>
-            </form>
-        </div>
+        <hr />
 
-        <div class="card">
-            <% certs.forEach(c => { %>
-                <div>
-                    <img src="<%= c.image %>" width="120">
-                    <a href="/admin/certifications/delete/<%= c._id %>">Delete</a>
+        <% certs.forEach(c=> { %>
+            <div class="card">
+                <h3>
+                    <%= c.title %>
+                </h3>
+                <p>
+                    <%= c.provider %> - <%= c.year %>
+                </p>
+
+                <div class="image-box">
+                    <img src="<%= c.image %>" />
                 </div>
-                <hr>
+
+                <a class="delete" href="/admin/certifications/delete/<%= c._id %>"> Delete</a>
+            </div>
             <% }) %>
-        </div>
 
     </div>
 </body>
+
 </html>

@@ -1,5 +1,10 @@
-const mongoose = require("mongoose");
-module.exports = mongoose.model("Admin", {
-    username: String,
-    password: String
-});
+
+import mongoose from "mongoose";
+
+export default mongoose.model(
+    "Admin",
+    new mongoose.Schema({
+        email: String,
+        password: String
+    })
+);

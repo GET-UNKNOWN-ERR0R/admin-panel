@@ -1,6 +1,5 @@
-module.exports = (req, res, next) => {
-    if (!req.session.admin) {
-        return res.redirect("/admin/login");
-    }
-    next();
+
+export const isAdmin = (req, res, next) => {
+    if (req.session.admin) return next();
+    res.redirect("/admin/login");
 };

@@ -1,7 +1,10 @@
-const mongoose = require("mongoose");
-module.exports = mongoose.model("Settings", {
+import mongoose from "mongoose";
+
+const settingsSchema = new mongoose.Schema({
     aboutLine1: String,
     aboutLine2: String,
-    resumeLink: String,
-    profileImage: String
+    profileImage: String,
+    resumeLink: String
 });
+
+export default mongoose.model("Settings", settingsSchema);

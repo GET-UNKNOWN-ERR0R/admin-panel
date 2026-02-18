@@ -1,219 +1,157 @@
+import express from "express";
+import upload from "../middleware/upload.js";
+import { isAdmin } from "../middleware/auth.js";
+import { uploadToCloudinary } from "../config/cloudinary.js";
 
-const router = require("express").Router();
-const bcrypt = require("bcryptjs");
+import Project from "../models/Project.js";
+import Certification from "../models/Certification.js";
+import Settings from "../models/Settings.js";
+import Visitor from "../models/Visitor.js";
 
-const Admin = require("../models/Admin");
-const Project = require("../models/Project");
-const Certification = require("../models/Certification");
-const Settings = require("../models/Settings");
+const router = express.Router();
 
-const auth = require("../middleware/auth");
-const upload = require("../middleware/upload");
-const cloudinary = require("../config/cloudinary");
-
-const Visitor = require("../models/Visitor");
-
-router.get("/visitors", auth, async (req, res) => {
-    const visitors = await Visitor.find().sort({ time: -1 });
-    res.render("visitors", { visitors });
-});
-
-
-// ================= LOGIN =================
-
+/* LOGIN */
 router.get("/login", (req, res) => res.render("login"));
 
-
-router.post("/login", async (req, res) => {
-    const admin = await Admin.findOne({ username: req.body.username });
-    if (!admin) return res.send("Invalid username");
-
-    const ok = await bcrypt.compare(req.body.password, admin.password);
-    if (!ok) return res.send("Invalid password");
-
-    // req.session.admin = admin._id;
-    // res.redirect("/admin/dashboard");
-    req.session.admin = admin._id;
-    req.session.save(() => {
-        res.redirect("/admin/dashboard");
-    });
-
+router.post("/login", (req, res) => {
+    if (
+        req.body.email === process.env.ADMIN_USER &&
+        req.body.password === process.env.ADMIN_PASS
+    ) {
+        req.session.admin = true;
+        return res.redirect("/admin/dashboard");
+    }
+    res.redirect("/admin/login");
 });
 
-router.get("/logout", (req, res) => {
-    req.session.destroy(() => res.redirect("/admin/login"));
+/* DASHBOARD */
+router.get("/dashboard", isAdmin, (req, res) => {
+    res.render("dashboard");
 });
 
-router.get("/dashboard", auth, (req, res) => res.render("dashboard"));
+/* PROJECTS */
 
-// Projects
-
-router.get("/projects", auth, async (req, res) => {
+router.get("/projects", isAdmin, async (req, res) => {
     res.render("projects", { projects: await Project.find() });
 });
 
+router.post(
+    "/projects",
+    isAdmin,
+    upload.single("image"),
+    async (req, res) => {
+        try {
+            if (!req.file) {
+                return res.send("No file uploaded");
+            }
 
-// ADD PROJECT
-router.post("/projects/add", auth, upload.single("image"), async (req, res) => {
-    let image = "";
-    if (req.file) {
-        const r = await cloudinary.uploader.upload(req.file.path);
-        image = r.secure_url;
+            const image = await uploadToCloudinary(req.file, "projects");
+
+            await Project.create({
+                title: req.body.title,
+                description: req.body.description,
+                tech: req.body.tech.split(","),
+                github: req.body.github,
+                live: req.body.live,
+                image
+            });
+
+            res.redirect("/admin/projects");
+        } catch (err) {
+            console.error("Project upload error:", err.message);
+            res.send("Cloudinary upload failed");
+        }
     }
-
-    await Project.create({
-        title: req.body.title,
-        description: req.body.description,
-        tech: req.body.tech?.split(","),
-        github: req.body.github,
-        live: req.body.live,
-        image
-    });
-
-    res.redirect("/admin/projects");
-});
-
-router.post("/projects", auth, upload.single("image"), async (req, res) => {
-
-    let image = "";
-    if (req.file) {
-        const r = await cloudinary.uploader.upload(req.file.path);
-        image = r.secure_url;
-    }
-
-    const techArray = req.body.tech.split(",").map(t => t.trim());
-
-    await Project.create({
-        ...req.body,
-        tech: techArray,
-        image
-    });
-
-    res.redirect("/admin/projects");
-});
+);
 
 
-
-// DELETE PROJECT
-router.get("/projects/delete/:id", auth, async (req, res) => {
+router.get("/projects/delete/:id", isAdmin, async (req, res) => {
     await Project.findByIdAndDelete(req.params.id);
     res.redirect("/admin/projects");
 });
 
+/* CERTIFICATIONS */
 
-// UPDATE PROJECT
-router.post("/projects/update/:id", auth, upload.single("image"), async (req, res) => {
-    let image = req.body.oldImage;
-
-    if (req.file) {
-        const r = await cloudinary.uploader.upload(req.file.path);
-        image = r.secure_url;
-    }
-
-    await Project.findByIdAndUpdate(req.params.id, {
-        title: req.body.title,
-        description: req.body.description,
-        tech: req.body.tech?.split(","),
-        github: req.body.github,
-        live: req.body.live,
-        image
+router.get("/certifications", isAdmin, async (req, res) => {
+    res.render("certifications", {
+        certs: await Certification.find()
     });
-
-    res.redirect("/admin/projects");
 });
 
+router.post(
+    "/certifications",
+    isAdmin,
+    upload.single("image"),
+    async (req, res) => {
+        const image = await uploadToCloudinary(req.file, "certifications");
 
-// Certifications
+        await Certification.create({
+            ...req.body,
+            image
+        });
 
-router.get("/certifications", auth, async (req, res) => {
-    res.render("certifications", { certs: await Certification.find() });
-});
-
-
-// ADD CERT
-router.post("/certifications/add", auth, upload.single("image"), async (req, res) => {
-    let image = "";
-    if (req.file) {
-        const r = await cloudinary.uploader.upload(req.file.path);
-        image = r.secure_url;
+        res.redirect("/admin/certifications");
     }
+);
 
-    await Certification.create({
-        title: req.body.title,
-        provider: req.body.provider,
-        year: req.body.year,
-        image
-    });
-
-    res.redirect("/admin/certifications");
-});
-
-
-// DELETE CERT
-router.get("/certifications/delete/:id", auth, async (req, res) => {
+router.get("/certifications/delete/:id", isAdmin, async (req, res) => {
     await Certification.findByIdAndDelete(req.params.id);
     res.redirect("/admin/certifications");
 });
 
+/* SETTINGS */
 
-// UPDATE CERT
-router.post("/certifications/update/:id", auth, upload.single("image"), async (req, res) => {
-    let image = req.body.oldImage;
-
-    if (req.file) {
-        const r = await cloudinary.uploader.upload(req.file.path);
-        image = r.secure_url;
-    }
-
-    await Certification.findByIdAndUpdate(req.params.id, {
-        title: req.body.title,
-        provider: req.body.provider,
-        year: req.body.year,
-        image
+router.get("/settings", isAdmin, async (req, res) => {
+    res.render("settings", {
+        settings: await Settings.findOne()
     });
-
-    res.redirect("/admin/certifications");
 });
 
+router.post(
+    "/settings",
+    isAdmin,
+    upload.fields([
+        { name: "profileImage" },
+        { name: "resume" }
+    ]),
+    async (req, res) => {
+        const profileImage = req.files.profileImage
+            ? await uploadToCloudinary(req.files.profileImage[0], "profile")
+            : req.body.oldProfile;
 
-// Settings
+        await Settings.findOneAndUpdate(
+            {},
+            {
+                aboutLine1: req.body.aboutLine1,
+                aboutLine2: req.body.aboutLine2,
+                profileImage,
+                resumeLink: req.body.resumeLink
+            },
+            { upsert: true }
+        );
 
-router.get("/settings", auth, async (req, res) => {
-    const s = await Settings.findOne();
-    res.render("settings", { s });
-});
-
-
-// UPDATE SETTINGS 
-router.post("/settings", auth, upload.fields([
-    { name: "profileImage" },
-    { name: "resume" }
-]), async (req, res) => {
-
-    let profileImage = req.body.oldProfile;
-    let resume = req.body.oldResume;
-
-    if (req.files?.profileImage) {
-        const r = await cloudinary.uploader.upload(req.files.profileImage[0].path);
-        profileImage = r.secure_url;
+        res.redirect("/admin/settings");
     }
+);
 
-    if (req.files?.resume) {
-        const r = await cloudinary.uploader.upload(req.files.resume[0].path, {
-            resource_type: "raw"
-        });
-        resume = r.secure_url;
+/* VISITORS */
+
+router.get("/visitors", isAdmin, async (req, res) => {
+    res.render("visitors", {
+        visitors: await Visitor.find().sort({ createdAt: -1 })
+    });
+});
+
+router.post("/visitors/delete/:id", isAdmin, async (req, res) => {
+    try {
+        await Visitor.findByIdAndDelete(req.params.id);
+        res.redirect("/admin/visitors");
+    } catch (err) {
+        console.log(err);
+        res.redirect("/admin/visitors");
     }
-
-    await Settings.findOneAndUpdate({}, {
-        aboutLine1: req.body.aboutLine1,
-        aboutLine2: req.body.aboutLine2,
-        profileImage,
-        resumeLink: resume
-    }, { upsert: true });
-
-    res.redirect("/admin/settings");
 });
 
 
-module.exports = router;
+
+export default router;
