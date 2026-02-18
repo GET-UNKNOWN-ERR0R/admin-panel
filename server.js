@@ -5,6 +5,7 @@ const session = require("express-session");
 const MongoStore = require("connect-mongo");
 const cors = require("cors");
 const path = require("path");
+const axios = require("axios");
 
 const apiRoutes = require("./routes/apiRoutes");
 const adminRoutes = require("./routes/adminRoutes");
