@@ -28,4 +28,13 @@ router.post("/visitors", async (req, res) => {
     res.json({ success: true });
 });
 
+/* HEALTH CHECK ROUTE */
+router.get("/health", (req, res) => {
+    res.status(200).json({
+        status: "ok",
+        message: "Server is alive 🚀",
+        time: new Date()
+    });
+});
+
 export default router;
